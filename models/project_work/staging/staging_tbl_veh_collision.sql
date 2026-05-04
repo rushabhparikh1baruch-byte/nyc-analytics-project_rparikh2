@@ -1,11 +1,8 @@
--- Clean and standardize NYC Motor Vehicle Collision data
--- One row per collision event
-
-WITH veh_collision_data AS (
-   SELECT * FROM (
+models/project_work/staging/staging_tbl_veh_collision.sql$0 AS (
+   SELECT * 
+   FROM (
     SELECT *
         ,ROW_NUMBER() OVER (PARTITION BY collision_id ORDER BY crash_date DESC) AS RN
-    -- Ensure this matches your sources.yml (plural 'collisions')
     FROM {{ source('raw', 'source_nyc_motor_vehicle_collisions') }}
    ) row_num
    WHERE RN = 1 -- removes duplicates
@@ -34,10 +31,6 @@ SELECT
     ,cross_street_name
     ,latitude
     ,longitude
-
-    -- Added the exact_location field per your previous request
-    ,CONCAT('(', CAST(latitude AS STRING), ', ', CAST(longitude AS STRING), ')') AS exact_location
-
     ,contributing_factor_vehicle_1
     ,contributing_factor_vehicle_2
     ,contributing_factor_vehicle_3
