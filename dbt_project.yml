@@ -18,23 +18,35 @@ clean-targets:
 
 # Set up models, which are basically SQL files, to create tables
 models:
- nyc_analytics:
-   +materialized: table
+  nyc_analytics:  # This matches the 'name' at the top of the file
+    +materialized: table
 
-   assignment_work:
-     staging:
-       +materialized: table
-       +schema: nyc_transit_restaurants_staging
+    # First top-level folder in /models
+    assignment_work:
+      staging:
+        +materialized: table
+        +schema: nyc_transit_restaurants_staging
+      marts:
+        +materialized: table
+        +schema: nyc_transit_restaurants_marts
+        shared:
+          +materialized: table
+        open_restaurant_apps:
+          +materialized: table
+        dot_311:
+          +materialized: table
 
-     marts:
-       +materialized: table
-       +schema: nyc_transit_restaurants_marts
-      
-       shared:
-         +materialized: table
-
-       open_restaurant_apps:
-         +materialized: table
-
-       dot_311:
-         +materialized: table
+    # Second top-level folder in /models (Must ALIGN with assignment_work)
+    project_work:
+      staging:
+        +materialized: table
+        +schema: cis_9440_group_project_staging
+      marts:
+        +materialized: table
+        +schema: cis_9440_group_project_warehouse_marts
+        shared:
+          +materialized: table
+        motor_veh_collision:
+          +materialized: table
+        street_complaints_311:
+          +materialized: table
