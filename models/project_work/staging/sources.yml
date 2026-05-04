@@ -6,7 +6,7 @@ sources:
     database: rushabhparikhcis9440s26
     schema: nyc_group_project 
     tables:
-      - name: source_nyc_motor_vehicle_collision
+      - name: source_nyc_motor_vehicle_collisions
         description: |
           NYC motor vehicle collision data. 
           One row represent one collision reported.
