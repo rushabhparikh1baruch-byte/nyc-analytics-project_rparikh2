@@ -40,6 +40,8 @@ sources:
             description: Latitude coordinate
           - name: longitude
             description: Longitude coordinate
+          - name: location
+            description: Combination of the geo based lat & long of the incident location
           - name: address_type
             description: 'Type of address (e.g., ADDRESS, INTERSECTION, BLOCKFACE)'
           - name: bbl
