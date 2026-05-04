@@ -26,6 +26,7 @@ cleaned AS (
            cross_street_2,
            latitude,
            longitude,
+           location,
            open_data_channel_type
        ),
 
