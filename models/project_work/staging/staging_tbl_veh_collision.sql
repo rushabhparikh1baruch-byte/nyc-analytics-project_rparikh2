@@ -1,4 +1,4 @@
-models/project_work/staging/staging_tbl_veh_collision.sql$0 AS (
+WITH veh_collision_data AS (
    SELECT * 
    FROM (
     SELECT *
