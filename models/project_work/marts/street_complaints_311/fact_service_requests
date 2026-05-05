@@ -1,0 +1,48 @@
+-- fact_service_request: One row per 311 street complaint
+-- Joins to Date, Location, and Resolution dimensions
+
+WITH service_requests AS (
+    SELECT * FROM {{ ref('stg_nyc_311_street_condition') }}
+),
+
+dim_location AS (
+    SELECT * FROM {{ ref('dim_location') }}
+),
+
+dim_resolution AS (
+    SELECT * FROM {{ ref('dim_resolution') }}
+)
+
+SELECT
+    -- Primary Key
+    {{ dbt_utils.generate_surrogate_key(['sr.request_id']) }} AS sr_key,
+
+    -- Foreign Keys
+    {{ dbt_utils.generate_surrogate_key(['CAST(sr.created_date AS DATE)']) }} AS created_date_key,
+    {{ dbt_utils.generate_surrogate_key(['CAST(sr.closed_date AS DATE)']) }} AS closed_date_key,
+    
+    -- Using the staging field for resolution updates as the third date key
+    {{ dbt_utils.generate_surrogate_key(['CAST(sr._stg_loaded_at AS DATE)']) }} AS resolution_action_date_key,
+
+    l.location_key,
+    r.resolution_key,
+
+    -- Degenerate Dimensions / Details
+    sr.descriptor AS problem_detail,
+    sr.exact_location
+
+FROM service_requests sr
+-- Join to Location (Matching the intersection sorting logic)
+LEFT JOIN dim_location l 
+    ON sr.borough = l.borough 
+    AND sr.incident_zip = l.zip_code
+    AND (
+        CASE 
+            WHEN sr.cross_street_1 <= sr.cross_street_2 THEN sr.cross_street_1 
+            ELSE sr.cross_street_2 
+        END = l.cross_street_1
+    )
+-- Join to Resolution
+LEFT JOIN dim_resolution r 
+    ON sr.status = r.status
+    AND sr.resolution_description = r.resolution_description
