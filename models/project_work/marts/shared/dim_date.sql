@@ -10,7 +10,7 @@ WITH all_dates AS (
 
    -- Get dates from restaurant applications
    SELECT DISTINCT CAST(created_date AS DATE) AS full_date
-   FROM {{ ref('stg_nyc_311_street_condition') }}
+   FROM {{ ref('stg_nyc_311_street_complaints') }}
    WHERE created_date IS NOT NULL
 ),
 
